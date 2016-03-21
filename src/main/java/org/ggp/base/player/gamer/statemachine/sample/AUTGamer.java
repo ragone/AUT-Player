@@ -18,11 +18,10 @@ import org.ggp.base.util.statemachine.implementation.prover.ProverStateMachine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
- * My implementation of a GGP player implementing Monte Carlo
+ * My implementation of a GGP player implementing Monte Carlo Tree Search
  *
  * @author Alexander Ragone
  * @version 18/03/16
@@ -50,6 +49,8 @@ public class AUTGamer extends StateMachineGamer {
         // Get the moves available
         List<Move> moves = theMachine.getLegalMoves(getCurrentState(), getRole());
         Move selection = moves.get(0);
+
+        UCTNode currentNode = new UCTNode(null);
 
         // If more than one move available choose best move, otherwise play only legal move
         if (moves.size() > 1) {
