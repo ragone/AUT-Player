@@ -126,5 +126,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Gradle: org.scala-lang:scala-library:2.11.7" level="project" />
+    <orderEntry type="library" name="jgraphx" level="project" />
   </component>
 </module>

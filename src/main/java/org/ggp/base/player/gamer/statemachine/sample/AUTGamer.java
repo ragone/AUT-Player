@@ -42,9 +42,9 @@ public class AUTGamer extends StateMachineGamer {
      */
     @Override
     public Move stateMachineSelectMove(long timeout) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
+        new TreeView();
         // Get the state machine
         theMachine = getStateMachine();
-        roleIndex = theMachine.getRoleIndices().get(getRole());
         start = System.currentTimeMillis();
         finishBy = timeout - 1000;
 
@@ -55,7 +55,7 @@ public class AUTGamer extends StateMachineGamer {
 
         // If more than one move available choose best move, otherwise play only legal move
         if (moves.size() > 1) {
-            selection = new UCT(finishBy, roleIndex, theMachine).UCTSearch(getCurrentState());
+            selection = new UCT(finishBy, getRole(), theMachine).UCTSearch(getCurrentState());
         }
 
         long stop = System.currentTimeMillis();
