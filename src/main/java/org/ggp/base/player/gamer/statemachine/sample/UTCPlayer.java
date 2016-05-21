@@ -25,7 +25,7 @@ import java.util.Random;
  * @author Alexander Ragone
  * @version 18/03/16
  */
-public class AUTGamer extends StateMachineGamer {
+public class UTCPlayer extends StateMachineGamer {
 
     private StateMachine theMachine;
     private long start;
@@ -42,7 +42,7 @@ public class AUTGamer extends StateMachineGamer {
      */
     @Override
     public Move stateMachineSelectMove(long timeout) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
-        new TreeView();
+//        new TreeView();
         // Get the state machine
         theMachine = getStateMachine();
         start = System.currentTimeMillis();

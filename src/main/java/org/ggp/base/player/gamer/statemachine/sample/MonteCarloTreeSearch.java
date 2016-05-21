@@ -57,7 +57,7 @@ public class MonteCarloTreeSearch {
 
     public Node treePolicy(Node node) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
         while (!theMachine.isTerminal(node.state)) {
-            if(node.untriedMoves.size() != 0) {
+            if(node.nextStatesMap.size() != 0) {
                 return expand(node);
             } else {
                 node = bestChild(node);
@@ -71,6 +71,8 @@ public class MonteCarloTreeSearch {
         double bestScore = 0;
         for (Node child : node.children) {
             double score = (child.reward / child.visits);
+//            System.out.println(child.move + " VISITS: " + child.visits  + " SCORE: " + score + " LEVEL: " + child.level);
+
             if (score > bestScore) {
                 bestChild = child;
                 bestScore = score;
@@ -80,10 +82,16 @@ public class MonteCarloTreeSearch {
     }
 
     public Node expand(Node node) throws MoveDefinitionException, TransitionDefinitionException {
-        int randomIndex = random.nextInt(node.untriedMoves.size());
-        Move move = node.untriedMoves.get(randomIndex);
-        MachineState newState = theMachine.getRandomNextState(node.state, role, move);
-        Node child = node.addChild(newState, move);
+        Move myFirstMove = node.myMoves.get(random.nextInt(node.myMoves.size()));
+        List<MachineState> states = node.nextStatesMap.get(myFirstMove);
+        int statesIndex = random.nextInt(states.size());
+        MachineState newState = states.get(statesIndex);
+        states.remove(statesIndex);
+        if(states.size() == 0) {
+            node.nextStatesMap.remove(myFirstMove);
+            node.myMoves.remove(myFirstMove);
+        }
+        Node child = node.addChild(newState, myFirstMove);
         return child;
     }
 }

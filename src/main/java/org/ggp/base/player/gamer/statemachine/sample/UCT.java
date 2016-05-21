@@ -1,6 +1,5 @@
 package org.ggp.base.player.gamer.statemachine.sample;
 
-import org.ggp.base.util.gdl.grammar.GdlPool;
 import org.ggp.base.util.statemachine.MachineState;
 import org.ggp.base.util.statemachine.Move;
 import org.ggp.base.util.statemachine.Role;
@@ -9,11 +8,13 @@ import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 
+import java.util.List;
+
 
 public class UCT extends MonteCarloTreeSearch {
 
     private final double EXPLORATION_CONSTANT = 1 / Math.sqrt(2);
-    private final boolean MINIMAX = false;
+    private final boolean MINIMAX = true;
     private Node rootNode;
 
     public UCT(long finishBy, Role role, StateMachine theMachine) {
@@ -24,19 +25,19 @@ public class UCT extends MonteCarloTreeSearch {
         // Set the root node parent to null
         rootNode = new Node(state, null, null, 0, theMachine, role);
         // Until time runs out, run algorithm
-        Node currentNode = rootNode;
         while(System.currentTimeMillis() < finishBy) {
-            currentNode = treePolicy(rootNode);
+            Node currentNode = treePolicy(rootNode);
             double reward = defaultPolicy(currentNode.state);
             backup(currentNode, reward);
         }
         // Return best child move
-        return bestChild(rootNode, 0.0, MINIMAX).move;
+        Node node = bestChild(rootNode, 0.0, MINIMAX);
+        return node.move;
     }
 
     public Node treePolicy(Node node) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
         while (!theMachine.isTerminal(node.state)) {
-            if(node.untriedMoves.size() != 0) {
+            if(node.nextStatesMap.size() != 0) {
                 return expand(node);
             } else {
                 node = bestChild(node, EXPLORATION_CONSTANT, MINIMAX);
@@ -47,30 +48,25 @@ public class UCT extends MonteCarloTreeSearch {
 
     public Node bestChildMinimax(Node node, double explorationConstant) {
         Node bestChild = null;
-        double bestScore;
-        boolean myTurn;
-        if(node.move != null) {
-            myTurn = node.move.toString() != new Move(GdlPool.getConstant("noop")).toString();
-        } else {
-            myTurn = false;
-        }
-        if (myTurn) {
-            bestScore = 0;
-        } else {
-            bestScore = 1;
-        }
+        double bestScore = Double.POSITIVE_INFINITY;
         for (Node child : node.children) {
             double score;
-            if(myTurn) {
+            if(!child.myTurn) {
                 score = (child.reward / child.visits) + explorationConstant * (Math.sqrt((2*Math.log(node.visits))/child.visits));
             } else {
                 score = (child.reward / child.visits) - explorationConstant * (Math.sqrt((2*Math.log(node.visits))/child.visits));
             }
             System.out.println(child.move + " VISITS: " + child.visits  + " SCORE: " + score + " LEVEL: " + child.level);
-            if (myTurn && score > bestScore || !myTurn && score < bestScore) {
+            if(bestScore == Double.POSITIVE_INFINITY) {
+                bestChild = child;
+                bestScore = score;
+            } else if (!child.myTurn && score > bestScore || child.myTurn && score < bestScore) {
                 bestChild = child;
                 bestScore = score;
             }
+        }
+        if(bestChild == null) {
+            System.out.print("");
         }
         return bestChild;
     }
@@ -95,6 +91,14 @@ public class UCT extends MonteCarloTreeSearch {
             return bestChildMinimax(node, explorationConstant);
         } else {
             return bestChildGen(node, explorationConstant);
+        }
+    }
+
+    public void backup(Node node, double reward) {
+        while (node != null) {
+//            if(!node.myTurn) { reward = -reward; }
+            node.update(reward);
+            node = node.parent;
         }
     }
 }
