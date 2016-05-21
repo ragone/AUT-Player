@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Node {
     private final StateMachine theMachine;
-    public final int RAVE_CUTOFF = 100;
+    public final int RAVE_CUTOFF = 1000;
 
     public final Role myRole;
     public final Role opponentRole;
@@ -86,7 +86,7 @@ public class Node {
     }
 
     public void updateAlphaValue() {
-        double newAlpha = (RAVE_CUTOFF - AMAFvisits)/RAVE_CUTOFF;
+        double newAlpha = (RAVE_CUTOFF - AMAFvisits)/(double)RAVE_CUTOFF;
         if (newAlpha < 0.0) {
             newAlpha = 0.0;
         }
