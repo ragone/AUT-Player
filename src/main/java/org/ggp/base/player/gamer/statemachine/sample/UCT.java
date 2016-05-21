@@ -8,14 +8,12 @@ import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 
-import java.util.List;
-
 
 public class UCT extends MonteCarloTreeSearch {
 
-    private final double EXPLORATION_CONSTANT = 1 / Math.sqrt(2);
-    private final boolean MINIMAX = true;
-    private Node rootNode;
+    public final double EXPLORATION_CONSTANT = 1 / Math.sqrt(2);
+    public final boolean MINIMAX = true;
+    public Node rootNode;
 
     public UCT(long finishBy, Role role, StateMachine theMachine) {
         super(finishBy, role, theMachine);
@@ -51,7 +49,7 @@ public class UCT extends MonteCarloTreeSearch {
         double bestScore = Double.POSITIVE_INFINITY;
         for (Node child : node.children) {
             double score;
-            if(!child.myTurn) {
+            if(child.turn != node.myRole) {
                 score = (child.reward / child.visits) + explorationConstant * (Math.sqrt((2*Math.log(node.visits))/child.visits));
             } else {
                 score = (child.reward / child.visits) - explorationConstant * (Math.sqrt((2*Math.log(node.visits))/child.visits));
@@ -60,7 +58,7 @@ public class UCT extends MonteCarloTreeSearch {
             if(bestScore == Double.POSITIVE_INFINITY) {
                 bestChild = child;
                 bestScore = score;
-            } else if (!child.myTurn && score > bestScore || child.myTurn && score < bestScore) {
+            } else if (child.turn != node.myRole && score > bestScore || child.turn == node.myRole && score < bestScore) {
                 bestChild = child;
                 bestScore = score;
             }
@@ -96,7 +94,6 @@ public class UCT extends MonteCarloTreeSearch {
 
     public void backup(Node node, double reward) {
         while (node != null) {
-//            if(!node.myTurn) { reward = -reward; }
             node.update(reward);
             node = node.parent;
         }

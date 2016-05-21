@@ -82,16 +82,25 @@ public class MonteCarloTreeSearch {
     }
 
     public Node expand(Node node) throws MoveDefinitionException, TransitionDefinitionException {
-        Move myFirstMove = node.myMoves.get(random.nextInt(node.myMoves.size()));
-        List<MachineState> states = node.nextStatesMap.get(myFirstMove);
+        Move move;
+        if(node.turn == node.myRole) {
+            move = node.myMoves.get(random.nextInt(node.myMoves.size()));
+        } else {
+            move = node.opponentMoves.get(random.nextInt(node.opponentMoves.size()));
+        }
+        List<MachineState> states = node.nextStatesMap.get(move);
         int statesIndex = random.nextInt(states.size());
         MachineState newState = states.get(statesIndex);
         states.remove(statesIndex);
         if(states.size() == 0) {
-            node.nextStatesMap.remove(myFirstMove);
-            node.myMoves.remove(myFirstMove);
+            node.nextStatesMap.remove(move);
+            if(node.turn == node.myRole) {
+                node.myMoves.remove(move);
+            } else {
+                node.opponentMoves.remove(move);
+            }
         }
-        Node child = node.addChild(newState, myFirstMove);
+        Node child = node.addChild(newState, move);
         return child;
     }
 }

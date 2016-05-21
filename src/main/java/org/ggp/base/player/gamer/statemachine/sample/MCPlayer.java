@@ -52,7 +52,7 @@ public class MCPlayer extends StateMachineGamer {
 
         // If more than one move available choose best move, otherwise play only legal move
         if (moves.size() > 1) {
-            selection = new RAVE(finishBy, getRole(), theMachine).RAVESearch(getCurrentState());
+            selection = new MonteCarloTreeSearch(finishBy, getRole(), theMachine).MCSearch(getCurrentState());
         }
 
         long stop = System.currentTimeMillis();

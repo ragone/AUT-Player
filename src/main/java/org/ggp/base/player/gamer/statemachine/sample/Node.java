@@ -16,9 +16,9 @@ public class Node {
     private final StateMachine theMachine;
     public final int RAVE_CUTOFF = 100;
 
-    public final Role role;
-    public Role opponentRole;
-    public boolean myTurn;
+    public final Role myRole;
+    public final Role opponentRole;
+    public Role turn;
     public int level;
     public Move move;
     public int visits;  // number of times visited
@@ -33,22 +33,31 @@ public class Node {
     public List<Move> opponentMoves;
     public Map<Move, List<MachineState>> nextStatesMap;
 
-    public Node(MachineState state, Node parent, Move move, int level, StateMachine theMachine, Role role) throws MoveDefinitionException, TransitionDefinitionException {
+    public Node(MachineState state, Node parent, Move move, int level, StateMachine theMachine, Role myRole) throws MoveDefinitionException, TransitionDefinitionException {
         this.state = state;
         this.parent = parent;
         this.move = move;
         this.theMachine = theMachine;
-        this.role = role;
+        this.myRole = myRole;
         children = new ArrayList<>();
-        opponentRole = theMachine.getRoles().get(theMachine.getRoleIndices().get(role) == 1?0:1);
+        opponentRole = theMachine.getRoles().get(theMachine.getRoleIndices().get(myRole) == 1?0:1);
+        if(parent == null || parent.turn == opponentRole) {
+            turn = myRole;
+        } else {
+            turn = opponentRole;
+        }
         if(theMachine.isTerminal(state)) {
             myMoves = new ArrayList<>();
             opponentMoves = new ArrayList<>();
             nextStatesMap = new HashMap<>();
         } else {
-            myMoves = new ArrayList<>(theMachine.getLegalMoves(state, role));
-            opponentMoves = theMachine.getLegalMoves(state, opponentRole);
-            nextStatesMap = theMachine.getNextStates(state, role);
+            myMoves = new ArrayList<>(theMachine.getLegalMoves(state, myRole));
+            opponentMoves = new ArrayList<>(theMachine.getLegalMoves(state, opponentRole));
+            if (turn == myRole) {
+                nextStatesMap = theMachine.getNextStates(state, myRole);
+            } else {
+                nextStatesMap = theMachine.getNextStates(state, opponentRole);
+            }
         }
         visits = 0;
         reward = 0.0;
@@ -57,12 +66,6 @@ public class Node {
         alphaValue = 1.0;
 
         this.level = level;
-        if(myMoves.size() == 1) {
-            // Not my turn
-            myTurn = false;
-        } else {
-            myTurn = true;
-        }
     }
 
     public void update(double value) {
@@ -71,27 +74,23 @@ public class Node {
     }
 
     public void updateAMAF(double value) {
-        visits++;
-        reward += value;
         AMAFvisits++;
         AMAFreward += value;
         updateAlphaValue();
     }
 
     public Node addChild(MachineState state, Move move) throws MoveDefinitionException, TransitionDefinitionException {
-        Node child;
-        child = new Node(state, this, move, level + 1, theMachine, role);
+        Node child = new Node(state, this, move, level + 1, theMachine, myRole);
         children.add(child);
         return child;
     }
 
     public void updateAlphaValue() {
-        double newAlpha = (RAVE_CUTOFF - visits)/RAVE_CUTOFF;
+        double newAlpha = (RAVE_CUTOFF - AMAFvisits)/RAVE_CUTOFF;
         if (newAlpha < 0.0) {
             newAlpha = 0.0;
         }
         alphaValue = newAlpha;
 
     }
-
 }
