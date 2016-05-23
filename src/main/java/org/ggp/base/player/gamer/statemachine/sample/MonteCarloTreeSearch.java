@@ -103,4 +103,8 @@ public class MonteCarloTreeSearch {
         Node child = node.addChild(newState, move);
         return child;
     }
+
+    public int getIndex(Role role) {
+        return theMachine.getRoleIndices().get(role);
+    }
 }

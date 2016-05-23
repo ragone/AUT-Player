@@ -22,7 +22,7 @@ import java.util.List;
  * @author Alexander Ragone
  * @version 18/03/16
  */
-public class MCPlayer extends StateMachineGamer {
+public class AMAFPlayer extends StateMachineGamer {
 
     private StateMachine theMachine;
     private long start;
@@ -39,6 +39,7 @@ public class MCPlayer extends StateMachineGamer {
      */
     @Override
     public Move stateMachineSelectMove(long timeout) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
+//        new TreeView();
         // Get the state machine
         theMachine = getStateMachine();
         start = System.currentTimeMillis();
@@ -51,7 +52,7 @@ public class MCPlayer extends StateMachineGamer {
 
         // If more than one move available choose best move, otherwise play only legal move
         if (moves.size() > 1) {
-            selection = new MonteCarloTreeSearch(finishBy, getRole(), theMachine).MCSearch(getCurrentState());
+            selection = new AMAF(finishBy, getRole(), theMachine).AMAFSearch(getCurrentState());
         }
 
         long stop = System.currentTimeMillis();

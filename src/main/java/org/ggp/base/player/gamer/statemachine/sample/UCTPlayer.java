@@ -25,7 +25,7 @@ import java.util.Random;
  * @author Alexander Ragone
  * @version 18/03/16
  */
-public class UTCPlayer extends StateMachineGamer {
+public class UCTPlayer extends StateMachineGamer {
 
     private StateMachine theMachine;
     private long start;

@@ -121,8 +121,4 @@ public class RAVE extends UCT {
             node = node.parent;
         }
     }
-
-    private int getIndex(Role role) {
-        return theMachine.getRoleIndices().get(role);
-    }
 }

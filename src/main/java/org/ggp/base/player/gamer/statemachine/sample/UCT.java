@@ -63,9 +63,6 @@ public class UCT extends MonteCarloTreeSearch {
                 bestScore = score;
             }
         }
-        if(bestChild == null) {
-            System.out.print("");
-        }
         return bestChild;
     }
 
@@ -94,7 +91,7 @@ public class UCT extends MonteCarloTreeSearch {
 
     public void backup(Node node, double reward) {
         while (node != null) {
-            node.update(reward);
+            node.updateUCT(reward);
             node = node.parent;
         }
     }

@@ -73,6 +73,11 @@ public class Node {
         reward += value;
     }
 
+    public void updateUCT(double value) {
+        visits++;
+        reward += value;
+    }
+
     public void updateAMAF(double value) {
         AMAFvisits++;
         AMAFreward += value;
@@ -91,6 +96,5 @@ public class Node {
             newAlpha = 0.0;
         }
         alphaValue = newAlpha;
-
     }
 }
