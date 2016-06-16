@@ -109,7 +109,7 @@ public final class GameServerRunner
                 goalStr += ",";
             }
         }
-        bw.write(playerStr + "=" + goalStr);
+        bw.write(playerStr + "=" + goalStr + ";");
         bw.flush();
         bw.close();
     }

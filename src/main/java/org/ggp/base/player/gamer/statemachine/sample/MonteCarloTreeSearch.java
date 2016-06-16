@@ -18,6 +18,8 @@ public class MonteCarloTreeSearch {
     public long finishBy;
     public Role role;
     public Node rootNode;
+    public int playouts = 0;
+
 
     public MonteCarloTreeSearch(long finishBy, Role role, StateMachine theMachine) {
         this.finishBy = finishBy;
@@ -37,6 +39,7 @@ public class MonteCarloTreeSearch {
             backup(currentNode, reward);
         }
         // Return best child move
+//        System.out.println(" TOTAL PLAYOUTS: " + playouts);
         return bestChild(rootNode).move;
     }
 
@@ -52,6 +55,7 @@ public class MonteCarloTreeSearch {
             List<Move> moves = theMachine.getRandomJointMove(state);
             state = theMachine.getNextState(state, moves);
         }
+        playouts++;
         return theMachine.getGoal(state, role) / 100;
     }
 

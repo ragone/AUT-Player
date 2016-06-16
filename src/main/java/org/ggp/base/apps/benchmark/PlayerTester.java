@@ -12,6 +12,9 @@ import java.util.Set;
 import org.ggp.base.player.GamePlayer;
 import org.ggp.base.player.gamer.Gamer;
 import org.ggp.base.player.gamer.statemachine.random.RandomGamer;
+import org.ggp.base.player.gamer.statemachine.sample.MCPlayer;
+import org.ggp.base.player.gamer.statemachine.sample.RAVEPlayer;
+import org.ggp.base.player.gamer.statemachine.sample.UCTPlayer;
 import org.ggp.base.server.GameServer;
 import org.ggp.base.server.event.ServerNewMovesEvent;
 import org.ggp.base.util.game.Game;
@@ -210,6 +213,6 @@ public class PlayerTester {
     }
 
     public static void main(String[] args) throws InterruptedException, SymbolFormatException, IOException {
-        System.out.println("Benchmark score for random player: " + getBenchmarkScores(new RandomGamer()));
+        System.out.println("Benchmark score for random player: " + getBenchmarkScores(new RAVEPlayer()));
     }
 }

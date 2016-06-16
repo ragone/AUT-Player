@@ -47,7 +47,7 @@ public class MCPlayer extends StateMachineGamer {
         // Get the moves available
         List<Move> moves = theMachine.getLegalMoves(getCurrentState(), getRole());
         Move selection = moves.get(0);
-        System.out.println(selection);
+//        System.out.println(selection);
 
         // If more than one move available choose best move, otherwise play only legal move
         if (moves.size() > 1) {

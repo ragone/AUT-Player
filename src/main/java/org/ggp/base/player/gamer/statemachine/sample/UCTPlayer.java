@@ -2,6 +2,7 @@ package org.ggp.base.player.gamer.statemachine.sample;
 
 import org.ggp.base.apps.player.detail.DetailPanel;
 import org.ggp.base.apps.player.detail.SimpleDetailPanel;
+import org.ggp.base.apps.server.scheduling.Scheduler;
 import org.ggp.base.player.gamer.event.GamerSelectedMoveEvent;
 import org.ggp.base.player.gamer.exception.GamePreviewException;
 import org.ggp.base.player.gamer.statemachine.StateMachineGamer;
@@ -42,7 +43,7 @@ public class UCTPlayer extends StateMachineGamer {
      */
     @Override
     public Move stateMachineSelectMove(long timeout) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
-//        new TreeView();
+//   n      new TreeView();
         // Get the state machine
         theMachine = getStateMachine();
         start = System.currentTimeMillis();
@@ -51,7 +52,7 @@ public class UCTPlayer extends StateMachineGamer {
         // Get the moves available
         List<Move> moves = theMachine.getLegalMoves(getCurrentState(), getRole());
         Move selection = moves.get(0);
-        System.out.println(selection);
+//        System.out.println(selection);
 
         // If more than one move available choose best move, otherwise play only legal move
         if (moves.size() > 1) {

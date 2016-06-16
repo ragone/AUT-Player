@@ -41,6 +41,7 @@ public class RAVE extends UCT {
             backup(currentNode, reward);
         }
         // Return best child move
+//        System.out.println(" TOTAL PLAYOUTS: " + playouts);
         return bestChildMinimax(rootNode, 0.0).move;
     }
 
@@ -61,6 +62,7 @@ public class RAVE extends UCT {
             state = theMachine.getNextState(state, moves);
             usedMoves.get(rootNode.myRole).add(moves.get(getIndex(rootNode.myRole)));
             usedMoves.get(rootNode.opponentRole).add(moves.get(getIndex(rootNode.opponentRole)));
+            playouts++;
         }
         return theMachine.getGoal(state, role) / 100;
     }
@@ -69,7 +71,7 @@ public class RAVE extends UCT {
         Node bestChild = null;
         double bestScore = Double.POSITIVE_INFINITY;
 //        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        System.out.println("-----------------------");
+//        System.out.println("-----------------------");
         for (Node child : node.children) {
             double score;
             double UCTScore;
@@ -84,9 +86,9 @@ public class RAVE extends UCT {
                 score = UCTScore;
             }
 
-            System.out.println(child.move + " level: " + child.level + " score: " + score);
-            System.out.println("\t visits: " + child.visits  + " reward: " + child.reward);
-            System.out.println("\t amaf-visits: " + child.AMAFvisits  + " amaf-reward: " + child.AMAFreward);
+//            System.out.println(child.move + " level: " + child.level + " score: " + score);
+//            System.out.println("\t visits: " + child.visits  + " reward: " + child.reward);
+//            System.out.println("\t amaf-visits: " + child.AMAFvisits  + " amaf-reward: " + child.AMAFreward);
 
             if(bestScore == Double.POSITIVE_INFINITY) {
                 bestChild = child;
@@ -96,10 +98,10 @@ public class RAVE extends UCT {
                 bestScore = score;
             }
         }
-        if(bestChild == null) {
-            System.out.print("");
-        }
-        System.out.println("-----------------------");
+//        if(bestChild == null) {
+//            System.out.print("");
+//        }
+//        System.out.println("-----------------------");
 //        try {
 //            Thread.sleep(10000);
 //        } catch (InterruptedException e) {

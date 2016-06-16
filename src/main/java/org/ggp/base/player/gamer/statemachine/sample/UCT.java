@@ -29,6 +29,7 @@ public class UCT extends MonteCarloTreeSearch {
             backup(currentNode, reward);
         }
         // Return best child move
+//        System.out.println(" TOTAL PLAYOUTS: " + playouts);
         Node node = bestChild(rootNode, 0.0, MINIMAX);
         return node.move;
     }
@@ -54,7 +55,7 @@ public class UCT extends MonteCarloTreeSearch {
             } else {
                 score = (child.reward / child.visits) - explorationConstant * (Math.sqrt((2*Math.log(node.visits))/child.visits));
             }
-            System.out.println(child.move + " VISITS: " + child.visits  + " SCORE: " + score + " LEVEL: " + child.level);
+//            System.out.println(child.move + " VISITS: " + child.visits  + " SCORE: " + score + " LEVEL: " + child.level);
             if(bestScore == Double.POSITIVE_INFINITY) {
                 bestChild = child;
                 bestScore = score;
@@ -72,7 +73,7 @@ public class UCT extends MonteCarloTreeSearch {
         for (Node child : node.children) {
             double score = (child.reward / child.visits) + explorationConstant * (Math.sqrt((2*Math.log(node.visits))/child.visits));
             if(explorationConstant == 0.0)
-                System.out.println(child.move + " VISITS: " + child.visits  + " SCORE: " + score);
+//                System.out.println(child.move + " VISITS: " + child.visits  + " SCORE: " + score);
             if (score > bestScore) {
                 bestChild = child;
                 bestScore = score;
